@@ -27,6 +27,18 @@ class AuthController extends Controller
                 ]);
             }
 
+            if ($user->hasRole('superadmin')) {
+                $request->session()->regenerate();
+                return redirect()->route('superadmin.companies.index');
+            }
+
+            if ($user->company && $user->company->status != 1) {
+                Auth::logout();
+                return back()->withErrors([
+                    'user' => 'Tu financiera se encuentra inactiva. Contacta al administrador.'
+                ]);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended('/');

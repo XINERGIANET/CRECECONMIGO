@@ -43,6 +43,9 @@ class WebController extends Controller
 
     public function index(Request $request){
         $user = auth()->user();
+        if ($user->hasRole('superadmin')) {
+            return redirect()->route('superadmin.companies.index');
+        }
 
         /* Administrador */
 

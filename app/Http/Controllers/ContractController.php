@@ -707,7 +707,13 @@ class ContractController extends Controller
 
         // Aumentado el ancho del logo y movido un poco a la derecha según solicitud.
         // Ajuste: x=155, width=40 (antes x=150, width=30).
-        $fpdf->Image(asset('assets/images/logo.png'), 155, 20, 40);
+        $company = $contract->company ?? (auth()->check() ? auth()->user()->company : null);
+        $logoPath = ($company && $company->logo) ? public_path($company->logo) : public_path('assets/images/logo.png');
+        if (file_exists($logoPath)) {
+            $fpdf->Image($logoPath, 155, 20, 40);
+        } else {
+            $fpdf->Image(public_path('assets/images/logo.png'), 155, 20, 40);
+        }
 
         $fpdf->Cell(190, 10, utf8_decode('CONTRATO DEL PRÉSTAMO'), 0, 1, 'C');
 
@@ -813,7 +819,10 @@ class ContractController extends Controller
 
         // ...existing code...
         $fpdf->Ln(12);
-        $fpdf->MultiCell(190, 10, utf8_decode('En señal de conformidad, las partes suscriben este documento en la ciudad de Piura, el día ' . $contractDate->isoFormat('D [de] MMMM [de] YYYY') . '.'), 0, 1);
+        $companyName = $company ? $company->name : 'CREDYFACIL';
+        $companyRuc = $company ? $company->ruc : '20512345678';
+        $companyCity = $company ? $company->city : 'Piura';
+        $fpdf->MultiCell(190, 10, utf8_decode('En señal de conformidad, las partes suscriben este documento en la ciudad de ' . $companyCity . ', el día ' . $contractDate->isoFormat('D [de] MMMM [de] YYYY') . '.'), 0, 1);
 
         // Bloque de firmas: alineadas a la izquierda, una debajo de la otra
         // Reducir tamaño y espaciado para que estén más próximos y más pequeños
@@ -821,8 +830,8 @@ class ContractController extends Controller
         $fpdf->SetFont('Montserrat', '', 10);
         // Firma de la empresa (sangría a la izquierda)
         $fpdf->Cell(80, 5, utf8_decode('__________________________'), 0, 1, 'L');
-        $fpdf->Cell(80, 5, utf8_decode('CREDYFACIL'), 0, 1, 'L');
-        $fpdf->Cell(80, 5, utf8_decode('RUC: 20512345678'), 0, 1, 'L');
+        $fpdf->Cell(80, 5, utf8_decode($companyName), 0, 1, 'L');
+        $fpdf->Cell(80, 5, utf8_decode('RUC: ' . $companyRuc), 0, 1, 'L');
 
         // Espacio reducido antes de la firma del cliente
         $fpdf->Ln(6);

@@ -75,6 +75,24 @@ Route::middleware('auth')->group(function () {
 	Route::get('expenses/index_cash', [ExpenseController::class, 'index_cash'])->name('expenses.index_cash');
 	Route::get('expenses/excel_cash', [ExpenseController::class, 'excel_cash'])->name('expenses.excel_cash');
 	Route::resource('expenses', ExpenseController::class);
+
+	// Super Admin Dashboard Routes
+	Route::middleware('role:superadmin')->prefix('superadmin')->name('superadmin.')->group(function () {
+		Route::get('companies', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'index'])->name('companies.index');
+		Route::get('companies/create', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'create'])->name('companies.create');
+		Route::post('companies', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'store'])->name('companies.store');
+		Route::get('companies/{company}/edit', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'edit'])->name('companies.edit');
+		Route::put('companies/{company}', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'update'])->name('companies.update');
+		Route::post('companies/{company}/toggle-permission', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'togglePermission'])->name('companies.toggle-permission');
+		Route::put('companies/{company}/toggle-status', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'toggleStatus'])->name('companies.toggle-status');
+
+		Route::get('users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index'])->name('users.index');
+		Route::get('users/create', [\App\Http\Controllers\SuperAdmin\UserController::class, 'create'])->name('users.create');
+		Route::post('users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'store'])->name('users.store');
+		Route::get('users/{id}/edit', [\App\Http\Controllers\SuperAdmin\UserController::class, 'edit'])->name('users.edit');
+		Route::put('users/{id}', [\App\Http\Controllers\SuperAdmin\UserController::class, 'update'])->name('users.update');
+		Route::put('users/{id}/toggle-status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+	});
 });
 
 Route::middleware('role:admin')->group(function () {

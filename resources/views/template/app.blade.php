@@ -27,9 +27,13 @@
                 <h3 class="navbar-brand navbar-brand-autodark pt-5" style="font-size: 1rem">
                     <div href="." class="d-flex align-items-center">
                         <div class="icon-30 me-2" style="width: 30px; height: 30px;">
-                            <img src="{{ asset('assets/images/xinergia-icon.svg') }}" alt="">
+                            @if(auth()->check() && auth()->user()->company && auth()->user()->company->logo)
+                                <img src="{{ asset(auth()->user()->company->logo) }}" alt="Logo" style="max-height: 100%; object-fit: contain;">
+                            @else
+                                <img src="{{ asset('assets/images/xinergia-icon.svg') }}" alt="Logo" style="max-height: 100%; object-fit: contain;">
+                            @endif
 						</div>
-                        <span>CREDYFACIL</span>
+                        <span>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</span>
                     </div>
                 </h3>
                 <div class="navbar-nav flex-row d-lg-none">
@@ -67,165 +71,196 @@
                                 </span>
                             </a>
                         </li>
-                        @if (auth()->user()->hasRole('admin'))
+                        @if (auth()->user()->hasRole('superadmin'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('sellers.index') }}">
+                                <a class="nav-link" href="{{ route('superadmin.companies.index') }}">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <i class="ti ti-building-bank icon"></i>
+                                    </span>
+                                    <span class="nav-link-title">
+                                        Financieras
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('superadmin.users.index') }}">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                                         <i class="ti ti-users icon"></i>
                                     </span>
                                     <span class="nav-link-title">
-                                        Asesores comerciales
+                                        Usuarios
                                     </span>
                                 </a>
                             </li>
-                        @endif
-                        @if (!auth()->user()->hasRole( 'payments'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('clients.index') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <i class="ti ti-users icon"></i>
-                                </span>
-                                <span class="nav-link-title">
-                                    Clientes
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('clients.inactive') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <i class="ti ti-user-off icon"></i>
-                                </span>
-                                <span class="nav-link-title">
-                                    Clientes inactivos
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('contracts.index') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <i class="ti ti-file-text icon"></i>
-                                </span>
-                                <span class="nav-link-title">
-                                    Contratos
-                                </span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('contracts.ending') }}">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <i class="ti ti-file-text icon"></i>
-                                </span>
-                                <span class="nav-link-title">
-                                    Contratos por finalizar
-                                </span>
-                            </a>
-                        </li>
-                        @endif
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                                data-bs-auto-close="false" role="button" aria-expanded="true">
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <i class="ti ti-cash icon"></i>
-                                </span>
-                                <span class="nav-link-title">
-                                    Cobranzas
-                                </span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-menu-columns">
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="{{ route('payments.charges') }}">
-                                            Gestión de cobranza
-                                        </a>
-                                    </div>
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="{{ route('payments.dues') }}">
-                                            Gestión de mora
-                                        </a>
-                                    </div>
-                                    <div class="dropdown-menu-column">
-                                        <a class="dropdown-item" href="{{ route('payments.index') }}">
-                                            Pagos
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        @if (!auth()->user()->hasRole('payments'))
-                            @if (auth()->user()->hasRole('operations'))
+                        @elseif (auth()->user()->company)
+                            @if (auth()->user()->company->hasPermission('sellers') && auth()->user()->hasRole('admin'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('expenses.index') }}">
+                                    <a class="nav-link" href="{{ route('sellers.index') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <i class="ti ti-users icon"></i>
+                                        </span>
+                                        <span class="nav-link-title">
+                                            Asesores comerciales
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if (auth()->user()->company->hasPermission('contracts') && !auth()->user()->hasRole('payments'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('clients.index') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <i class="ti ti-users icon"></i>
+                                        </span>
+                                        <span class="nav-link-title">
+                                            Clientes
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('clients.inactive') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <i class="ti ti-user-off icon"></i>
+                                        </span>
+                                        <span class="nav-link-title">
+                                            Clientes inactivos
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('contracts.index') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <i class="ti ti-file-text icon"></i>
+                                        </span>
+                                        <span class="nav-link-title">
+                                            Contratos
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('contracts.ending') }}">
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <i class="ti ti-file-text icon"></i>
+                                        </span>
+                                        <span class="nav-link-title">
+                                            Contratos por finalizar
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if (auth()->user()->company->hasPermission('cobranzas'))
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                        data-bs-auto-close="false" role="button" aria-expanded="true">
                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                                             <i class="ti ti-cash icon"></i>
                                         </span>
                                         <span class="nav-link-title">
-                                            Prestamos
+                                            Cobranzas
                                         </span>
                                     </a>
+                                    <div class="dropdown-menu">
+                                        <div class="dropdown-menu-columns">
+                                            <div class="dropdown-menu-column">
+                                                <a class="dropdown-item" href="{{ route('payments.charges') }}">
+                                                    Gestión de cobranza
+                                                </a>
+                                            </div>
+                                            <div class="dropdown-menu-column">
+                                                <a class="dropdown-item" href="{{ route('payments.dues') }}">
+                                                    Gestión de mora
+                                                </a>
+                                            </div>
+                                            <div class="dropdown-menu-column">
+                                                <a class="dropdown-item" href="{{ route('payments.index') }}">
+                                                    Pagos
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
-                            @else
-                                @if (!auth()->user()->hasRole('seller'))
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                                            data-bs-auto-close="false" role="button" aria-expanded="true">
+                            @endif
+                            @if (auth()->user()->company->hasPermission('egresos') && !auth()->user()->hasRole('payments'))
+                                @if (auth()->user()->hasRole('operations'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('expenses.index') }}">
                                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                                 <i class="ti ti-cash icon"></i>
                                             </span>
                                             <span class="nav-link-title">
-                                                Egresos
+                                                Prestamos
                                             </span>
                                         </a>
-                                        <div class="dropdown-menu">
-                                            <div class="dropdown-menu-columns">
-                                                <div class="dropdown-menu-column">
-                                                    <a class="dropdown-item" href="{{ route('expenses.index') }}">
-                                                        Prestamos
-                                                    </a>
-                                                </div>
-                                                @if (auth()->user()->hasRole('admin'))
+                                    </li>
+                                @else
+                                    @if (!auth()->user()->hasRole('seller'))
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                                data-bs-auto-close="false" role="button" aria-expanded="true">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <i class="ti ti-cash icon"></i>
+                                                </span>
+                                                <span class="nav-link-title">
+                                                    Egresos
+                                                </span>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <div class="dropdown-menu-columns">
                                                     <div class="dropdown-menu-column">
-                                                        <a class="dropdown-item" href="{{ route('expenses.index_cash') }}">
-                                                            Administrativos 
+                                                        <a class="dropdown-item" href="{{ route('expenses.index') }}">
+                                                            Prestamos
                                                         </a>
                                                     </div>
-                                                @endif
+                                                    @if (auth()->user()->hasRole('admin'))
+                                                        <div class="dropdown-menu-column">
+                                                            <a class="dropdown-item" href="{{ route('expenses.index_cash') }}">
+                                                                Administrativos 
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div>
+                                        </li>
+                                    @endif
+                                @endif
+                            @endif
+                            @if (auth()->user()->hasRole('admin'))
+                                @if (auth()->user()->company->hasPermission('caja_y_cuentas'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('account-movements.index') }}">
+                                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                <i class="ti ti-wallet icon"></i>
+                                            </span>
+                                            <span class="nav-link-title">
+                                                Caja y cuentas
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (auth()->user()->company->hasPermission('traslados'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('transfers.index') }}">
+                                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                <i class="ti ti-truck icon"></i>
+                                            </span>
+                                            <span class="nav-link-title">
+                                                Traslados
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (auth()->user()->company->hasPermission('metas'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('goals.index') }}">
+                                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                <i class="ti ti-target icon"></i>
+                                            </span>
+                                            <span class="nav-link-title">
+                                                Metas
+                                            </span>
+                                        </a>
                                     </li>
                                 @endif
                             @endif
-                        @if (auth()->user()->hasRole('admin'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('account-movements.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <i class="ti ti-wallet icon"></i>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Caja y cuentas
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('transfers.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <i class="ti ti-truck icon"></i>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Traslados
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('goals.index') }}">
-                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <i class="ti ti-target icon"></i>
-                                    </span>
-                                    <span class="nav-link-title">
-                                        Metas
-                                    </span>
-                                </a>
-                            </li>
-                        @endif
                         @endif
                     </ul>
                 </div>
