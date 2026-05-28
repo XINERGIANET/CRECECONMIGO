@@ -4,8 +4,12 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company;
+use App\Models\PaymentMethod;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -58,9 +62,34 @@ class CompanyController extends Controller
         $data['permissions'] = $request->input('permissions', []);
         $data['status'] = 1;
 
-        Company::create($data);
+        $company = Company::create($data);
 
-        return redirect()->route('superadmin.companies.index')->with('success', 'Financiera creada con éxito.');
+        foreach (['Efectivo', 'BCP', 'YAPE'] as $methodName) {
+            PaymentMethod::withoutGlobalScopes()->create([
+                'company_id' => $company->id,
+                'name' => $methodName,
+                'active' => 1,
+            ]);
+        }
+
+        $adminLogin = 'admin_' . $company->id;
+        $adminPassword = 'Financiera@' . $company->id;
+
+        User::create([
+            'company_id' => $company->id,
+            'document' => '10000000',
+            'name' => 'Administrador ' . $company->name,
+            'address' => $company->address,
+            'phone' => '900000000',
+            'email' => Str::slug($company->name) . '@financiera.local',
+            'user' => $adminLogin,
+            'password' => Hash::make($adminPassword),
+            'role' => 'admin',
+            'state' => 0,
+            'deleted' => 0,
+        ]);
+
+        return redirect()->route('superadmin.companies.index')->with('success', 'Financiera creada con éxito. Usuario admin: ' . $adminLogin . ' / Contraseña: ' . $adminPassword);
     }
 
     public function edit(Company $company)
