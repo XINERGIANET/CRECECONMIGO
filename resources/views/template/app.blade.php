@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>Credyfacil</title>
+    <title>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</title>
     <link rel="icon" href="{{ asset('assets/images/xinergia-icon.svg') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-vendors.min.css') }}">
@@ -26,13 +26,7 @@
                 </button>
                 <h3 class="navbar-brand navbar-brand-autodark pt-5" style="font-size: 1rem">
                     <div href="." class="d-flex align-items-center">
-                        <div class="icon-30 me-2" style="width: 30px; height: 30px;">
-                            @if(auth()->check() && auth()->user()->company && auth()->user()->company->logo)
-                                <img src="{{ asset(auth()->user()->company->logo) }}" alt="Logo" style="max-height: 100%; object-fit: contain;">
-                            @else
-                                <img src="{{ asset('assets/images/xinergia-icon.svg') }}" alt="Logo" style="max-height: 100%; object-fit: contain;">
-                            @endif
-						</div>
+                       
                         <span>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</span>
                     </div>
                 </h3>
