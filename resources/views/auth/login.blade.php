@@ -240,8 +240,8 @@
 			</div>
 		</section>
 
-		<section class="brand-panel" aria-label="CredyFácil Soluciones Financieras">
-			<img src="{{ asset('assets/images/logo.png') }}" class="credy-logo" alt="CredyFácil Soluciones Financieras">
+		<section class="brand-panel" aria-label="{{ $loginCompanyName }}">
+			<img id="companyLogo" src="{{ $loginLogo }}" class="credy-logo" alt="{{ $loginCompanyName }}">
 		</section>
 	</main>
 
@@ -256,9 +256,46 @@
 			}
 		});
 
+		const defaultBranding = {
+			logo: @json($loginLogo),
+			name: @json($loginCompanyName)
+		};
+
+		let logoTimer = null;
+
+		function updateCompanyLogo(branding) {
+			$('#companyLogo').attr('src', branding.logo).attr('alt', branding.name);
+			$('.brand-panel').attr('aria-label', branding.name);
+		}
+
+		function fetchCompanyLogo(username) {
+			$.get('{{ route('auth.company-logo') }}', { user: username }, function(data) {
+				updateCompanyLogo(data);
+			});
+		}
+
 		$(document).ready(function() {
 			$('#loginForm').submit(function() {
 				$('#loginBtn').prop('disabled', true).text('Iniciando sesión...');
+			});
+
+			const initialUser = $('#user').val().trim();
+			if (initialUser) {
+				fetchCompanyLogo(initialUser);
+			}
+
+			$('#user').on('input blur', function() {
+				clearTimeout(logoTimer);
+				const username = $(this).val().trim();
+
+				if (!username) {
+					updateCompanyLogo(defaultBranding);
+					return;
+				}
+
+				logoTimer = setTimeout(function() {
+					fetchCompanyLogo(username);
+				}, 300);
 			});
 		});
 	</script>

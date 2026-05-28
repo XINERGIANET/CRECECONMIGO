@@ -24,6 +24,7 @@ Route::get('optimize', function () {
 
 
 Route::get('login', [AuthController::class, 'login'])->name('auth.login');
+Route::get('login/company-logo', [AuthController::class, 'companyLogo'])->name('auth.company-logo');
 Route::post('login', [AuthController::class, 'check'])->name('auth.check');
 Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 

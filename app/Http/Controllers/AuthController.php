@@ -2,13 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(){
-        return view('auth.login');
+    public function login(Request $request)
+    {
+        $branding = $this->resolveBrandingByUsername($request->old('user', ''));
+
+        return view('auth.login', [
+            'loginLogo' => $branding['logo'],
+            'loginCompanyName' => $branding['name'],
+        ]);
+    }
+
+    public function companyLogo(Request $request)
+    {
+        $data = $request->validate([
+            'user' => 'required|string|max:255',
+        ]);
+
+        return response()->json($this->resolveBrandingByUsername($data['user']));
+    }
+
+    private function resolveBrandingByUsername(?string $username): array
+    {
+        $default = [
+            'logo' => asset('assets/images/logo.png'),
+            'name' => 'CredyFácil Soluciones Financieras',
+        ];
+
+        $username = trim((string) $username);
+        if ($username === '') {
+            return $default;
+        }
+
+        $user = User::where('user', $username)->where('deleted', 0)->first();
+        if (!$user) {
+            return $default;
+        }
+
+        if ($user->hasRole('superadmin')) {
+            return [
+                'logo' => asset('assets/images/xinergia.png'),
+                'name' => 'Xinergia SaaS',
+            ];
+        }
+
+        $company = $user->company;
+        if (!$company) {
+            return $default;
+        }
+
+        return [
+            'logo' => asset($company->logo ?: 'assets/images/logo.png'),
+            'name' => $company->name,
+        ];
     }
 
     public function check(Request $request){
