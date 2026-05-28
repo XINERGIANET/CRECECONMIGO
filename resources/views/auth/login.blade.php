@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
-	<title>CredyFácil</title>
+	<title>Xinergia</title>
 	<link rel="stylesheet" href="{{ asset('assets/css/tabler.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/tabler-vendors.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
@@ -14,6 +14,7 @@
 	<style>
 		:root {
 			--login-blue: #2f73ca;
+			--login-blue-dark: #1e4f8f;
 			--login-link: #2563d8;
 			--login-text: #061631;
 			--login-muted: #657188;
@@ -34,7 +35,7 @@
 
 		.login-page {
 			display: grid;
-			grid-template-columns: minmax(360px, 34%) 1fr;
+			grid-template-columns: minmax(360px, 38%) 1fr;
 			min-height: 100vh;
 			background: #ffffff;
 		}
@@ -47,22 +48,22 @@
 		}
 
 		.login-form-wrap {
-			width: min(100%, 520px);
-		}
-
-		.login-xinergia {
-			display: block;
-			width: min(310px, 80%);
-			height: auto;
-			margin: 0 auto 32px;
+			width: min(100%, 480px);
 		}
 
 		.login-title {
-			margin: 0 0 24px;
-			font-size: 21px;
+			margin: 0 0 28px;
+			font-size: 24px;
 			font-weight: 700;
 			line-height: 1.25;
-			text-align: center;
+			color: var(--login-text);
+		}
+
+		.login-subtitle {
+			margin: -18px 0 28px;
+			color: var(--login-muted);
+			font-size: 16px;
+			line-height: 1.5;
 		}
 
 		.login-form .form-label {
@@ -130,10 +131,10 @@
 		}
 
 		.login-footer {
-			margin-top: 20px;
+			margin-top: 24px;
 			color: var(--login-muted);
-			font-size: 18px;
-			text-align: center;
+			font-size: 15px;
+			text-align: left;
 		}
 
 		.brand-panel {
@@ -141,13 +142,64 @@
 			align-items: center;
 			justify-content: center;
 			padding: 48px 64px;
-			background: #ffffff;
+			background: linear-gradient(145deg, #f4f8fd 0%, #e8f0fa 45%, #dce9f7 100%);
+			border-left: 1px solid #e2e8f0;
 		}
 
-		.credy-logo {
-			width: min(76vw, 1120px);
-			max-height: 50vh;
+		.brand-content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: min(100%, 560px);
+			text-align: center;
+		}
+
+		.brand-logo-wrap {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			padding: 32px 40px;
+			border-radius: 20px;
+			background: rgba(255, 255, 255, 0.85);
+			box-shadow: 0 18px 48px rgba(30, 79, 143, 0.1);
+		}
+
+		.brand-logo {
+			width: min(100%, 420px);
+			height: auto;
 			object-fit: contain;
+		}
+
+		.brand-tagline {
+			margin: 28px 0 0;
+			color: var(--login-blue-dark);
+			font-size: 22px;
+			font-weight: 700;
+			line-height: 1.35;
+			letter-spacing: -0.02em;
+		}
+
+		.brand-description {
+			margin: 12px 0 0;
+			max-width: 420px;
+			color: var(--login-muted);
+			font-size: 17px;
+			line-height: 1.55;
+		}
+
+		.brand-badge {
+			display: inline-block;
+			margin-top: 28px;
+			padding: 8px 18px;
+			border-radius: 999px;
+			background: var(--login-blue);
+			color: #ffffff;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
 		}
 
 		@media (max-width: 991.98px) {
@@ -161,12 +213,26 @@
 			}
 
 			.brand-panel {
-				padding: 12px 22px 42px;
+				order: -1;
+				padding: 36px 22px 28px;
+				border-left: 0;
+				border-bottom: 1px solid #e2e8f0;
 			}
 
-			.credy-logo {
-				width: min(92vw, 620px);
-				max-height: 260px;
+			.brand-logo-wrap {
+				padding: 24px 28px;
+			}
+
+			.brand-logo {
+				width: min(100%, 280px);
+			}
+
+			.brand-tagline {
+				font-size: 19px;
+			}
+
+			.brand-description {
+				font-size: 15px;
 			}
 		}
 
@@ -175,13 +241,8 @@
 				align-items: flex-start;
 			}
 
-			.login-xinergia {
-				width: min(260px, 82%);
-				margin-bottom: 26px;
-			}
-
 			.login-title {
-				font-size: 20px;
+				font-size: 21px;
 			}
 
 			.password-label {
@@ -203,9 +264,8 @@
 	<main class="login-page">
 		<section class="login-panel">
 			<div class="login-form-wrap">
-				<img src="{{ asset('assets/images/xinergia.png') }}" class="login-xinergia" alt="Xinergia">
-
 				<h1 class="login-title">Ingresa con tu cuenta</h1>
+				<p class="login-subtitle">Accede a tu panel de gestión financiera.</p>
 
 				<form id="loginForm" class="login-form" action="{{ route('auth.check') }}" method="POST" autocomplete="off">
 					@csrf
@@ -240,62 +300,25 @@
 			</div>
 		</section>
 
-		<section class="brand-panel" aria-label="{{ $loginCompanyName }}">
-			<img id="companyLogo" src="{{ $loginLogo }}" class="credy-logo" alt="{{ $loginCompanyName }}">
+		<section class="brand-panel" aria-label="Xinergia">
+			<div class="brand-content">
+				<div class="brand-logo-wrap">
+					<img src="{{ asset('assets/images/xinergia.png') }}" class="brand-logo" alt="Xinergia">
+				</div>
+				<p class="brand-tagline">Software de gestión para financieras</p>
+				<p class="brand-description">Plataforma integral para administrar clientes, contratos, cobranzas y operaciones de tu empresa.</p>
+				<span class="brand-badge">Producto Xinergia</span>
+			</div>
 		</section>
 	</main>
 
 	<script src="{{ asset('assets/js/tabler.min.js') }}"></script>
 	<script src="{{ asset('assets/js/theme.min.js') }}"></script>
-	<script src="{{ asset('assets/js/tom-select.base.min.js') }}"></script>
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 	<script>
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-
-		const defaultBranding = {
-			logo: @json($loginLogo),
-			name: @json($loginCompanyName)
-		};
-
-		let logoTimer = null;
-
-		function updateCompanyLogo(branding) {
-			$('#companyLogo').attr('src', branding.logo).attr('alt', branding.name);
-			$('.brand-panel').attr('aria-label', branding.name);
-		}
-
-		function fetchCompanyLogo(username) {
-			$.get('{{ route('auth.company-logo') }}', { user: username }, function(data) {
-				updateCompanyLogo(data);
-			});
-		}
-
 		$(document).ready(function() {
 			$('#loginForm').submit(function() {
 				$('#loginBtn').prop('disabled', true).text('Iniciando sesión...');
-			});
-
-			const initialUser = $('#user').val().trim();
-			if (initialUser) {
-				fetchCompanyLogo(initialUser);
-			}
-
-			$('#user').on('input blur', function() {
-				clearTimeout(logoTimer);
-				const username = $(this).val().trim();
-
-				if (!username) {
-					updateCompanyLogo(defaultBranding);
-					return;
-				}
-
-				logoTimer = setTimeout(function() {
-					fetchCompanyLogo(username);
-				}, 300);
 			});
 		});
 	</script>
