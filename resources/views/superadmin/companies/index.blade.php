@@ -82,6 +82,9 @@
                         </td>
                         <td class="text-end">
                             <div class="d-flex gap-2 justify-content-end">
+                                <a href="{{ route('superadmin.companies.import', $company->id) }}" class="btn btn-icon btn-info" title="Importar datos Excel">
+                                    <i class="ti ti-file-import icon"></i>
+                                </a>
                                 <a href="{{ route('superadmin.companies.edit', $company->id) }}" class="btn btn-icon btn-primary" title="Editar Financiera">
                                     <i class="ti ti-pencil icon"></i>
                                 </a>

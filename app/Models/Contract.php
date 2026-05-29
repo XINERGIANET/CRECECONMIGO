@@ -12,6 +12,7 @@ class Contract extends Model
 
     protected $fillable = [
         'company_id',
+        'import_code',
         'number_pagare',
         'client_type',
         'group_name',

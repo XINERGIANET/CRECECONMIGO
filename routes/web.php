@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 
 	// Super Admin Dashboard Routes
 	Route::middleware('role:superadmin')->prefix('superadmin')->name('superadmin.')->group(function () {
+		Route::get('import/template', [\App\Http\Controllers\SuperAdmin\DataImportController::class, 'template'])->name('import.template');
 		Route::get('companies', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'index'])->name('companies.index');
 		Route::get('companies/create', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'create'])->name('companies.create');
 		Route::post('companies', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'store'])->name('companies.store');
@@ -85,6 +86,8 @@ Route::middleware('auth')->group(function () {
 		Route::put('companies/{company}', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'update'])->name('companies.update');
 		Route::post('companies/{company}/toggle-permission', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'togglePermission'])->name('companies.toggle-permission');
 		Route::put('companies/{company}/toggle-status', [\App\Http\Controllers\SuperAdmin\CompanyController::class, 'toggleStatus'])->name('companies.toggle-status');
+		Route::get('companies/{company}/import', [\App\Http\Controllers\SuperAdmin\DataImportController::class, 'show'])->name('companies.import');
+		Route::post('companies/{company}/import', [\App\Http\Controllers\SuperAdmin\DataImportController::class, 'store'])->name('companies.import.store');
 
 		Route::get('users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index'])->name('users.index');
 		Route::get('users/create', [\App\Http\Controllers\SuperAdmin\UserController::class, 'create'])->name('users.create');
