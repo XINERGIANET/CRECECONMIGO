@@ -40,7 +40,7 @@
                     <th>RUC</th>
                     <th>Ciudad</th>
                     <th>Estado</th>
-                    <th>Módulos Habilitados (Click para toggle)</th>
+                    <th>Módulos y reportes del inicio (click para activar/desactivar)</th>
                     <th class="text-end">Acciones</th>
                 </tr>
             </thead>

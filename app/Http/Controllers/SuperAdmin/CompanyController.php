@@ -23,16 +23,26 @@ class CompanyController extends Controller
         'metas' => 'Metas',
     ];
 
+    const DASHBOARD_REPORTS = [
+        'reporte_cartera_dia' => 'Inicio: Cartera al Día',
+        'reporte_cartera_morosa' => 'Inicio: Cartera Morosa',
+    ];
+
+    public static function allPermissionModules(): array
+    {
+        return array_merge(self::MODULES, self::DASHBOARD_REPORTS);
+    }
+
     public function index()
     {
         $companies = Company::all();
-        $modules = self::MODULES;
+        $modules = self::allPermissionModules();
         return view('superadmin.companies.index', compact('companies', 'modules'));
     }
 
     public function create()
     {
-        $modules = self::MODULES;
+        $modules = self::allPermissionModules();
         return view('superadmin.companies.create', compact('modules'));
     }
 
@@ -94,7 +104,7 @@ class CompanyController extends Controller
 
     public function edit(Company $company)
     {
-        $modules = self::MODULES;
+        $modules = self::allPermissionModules();
         return view('superadmin.companies.edit', compact('company', 'modules'));
     }
 
@@ -129,7 +139,7 @@ class CompanyController extends Controller
     public function togglePermission(Request $request, Company $company)
     {
         $module = $request->input('module');
-        if (!array_key_exists($module, self::MODULES)) {
+        if (!array_key_exists($module, self::allPermissionModules())) {
             return response()->json(['error' => 'Módulo inválido.'], 400);
         }
 

@@ -226,9 +226,11 @@
 @endif
 
 @php
-    $portfolioDate = request()->portfolio_date ?? now()->format('Y-m-d');
+    $portfolioDate = $portfolioReportDate ?? request()->portfolio_date ?? now()->format('Y-m-d');
     $displayDate = \Carbon\Carbon::parse($portfolioDate)->format('d/m/Y');
+    $companyName = auth()->user()->company ? auth()->user()->company->name : 'Financiera';
 @endphp
+@if($showPortfolioDaily || $showPortfolioOverdue)
 <div class="card mb-3 shadow-sm">
     <div class="card-header">
         <h3 class="card-title mb-0">Reportes de cartera</h3>
@@ -257,6 +259,8 @@
         </form>
     </div>
 </div>
+@endif
+@if($showPortfolioDaily)
 <div class="card mb-4 shadow-sm">
     <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0" style="color: #00E5E5 !important;">Reporte de Cartera al Día ({{ $displayDate }})</h3>
@@ -364,6 +368,8 @@
         </table>
     </div>
 </div>
+@endif
+@if($showPortfolioOverdue)
 @php
     $overdueDate = $portfolioOverdueReport['date'];
     $overdueMoney = function ($value) {
@@ -378,7 +384,7 @@
         <table class="table table-bordered table-portfolio table-overdue mb-0">
             <thead>
                 <tr>
-                    <th class="bg-overdue-title" colspan="12">REPORTE DE CARTERA MOROSA CREDYFACIL AL {{ $overdueDate->format('d/m/Y') }}</th>
+                    <th class="bg-overdue-title" colspan="12">REPORTE DE CARTERA MOROSA {{ strtoupper($companyName) }} AL {{ $overdueDate->format('d/m/Y') }}</th>
                 </tr>
                 <tr>
                     <th></th>
@@ -416,7 +422,7 @@
             <tfoot>
                 @php $overdueTotals = $portfolioOverdueReport['totals']; @endphp
                 <tr class="bg-total-report">
-                    <td class="fw-bold text-start">CREDYFACIL</td>
+                    <td class="fw-bold text-start">{{ strtoupper($companyName) }}</td>
                     <td class="fw-bold text-nowrap portfolio-detail-cell" data-metric="current_wallet" data-seller-id="" data-date="{{ $overdueDate->format('Y-m-d') }}" title="Ver detalle">{{ number_format($overdueTotals['wallet'], 1) }}</td>
                     <td class="fw-bold text-nowrap portfolio-detail-cell" data-metric="mora_1_7" data-seller-id="" data-date="{{ $overdueDate->format('Y-m-d') }}" title="Ver detalle">S/ {{ number_format($overdueTotals['mora_1_7'], 1) }}</td>
                     <td class="fw-bold portfolio-detail-cell" data-metric="mora_1_7" data-seller-id="" data-date="{{ $overdueDate->format('Y-m-d') }}" title="Ver detalle">{{ $overduePercent($overdueTotals['mora_1_7_percent'], 2) }}</td>
@@ -433,6 +439,7 @@
         </table>
     </div>
 </div>
+@endif
 <h2>Indicadores de productividad</h2>
 <div class="card mb-3 shadow-sm">
 	<div class="card-body">

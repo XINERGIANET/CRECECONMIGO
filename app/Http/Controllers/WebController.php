@@ -25,6 +25,11 @@ class WebController extends Controller
 {
     public function portfolioDailyExcel(Request $request)
     {
+        $company = auth()->user()->company;
+        if (!$company || !$company->hasPermission('reporte_cartera_dia')) {
+            abort(403, 'Esta financiera no tiene habilitado el reporte de cartera al día.');
+        }
+
         $date = $request->date ? Carbon::parse($request->date) : today();
         
         $goalsExist = Goal::where('month', $date->month)
@@ -495,12 +500,23 @@ class WebController extends Controller
         })->where('paid', 0)
         ->count();
 
+        $company = $user->company;
+        $showPortfolioDaily = $company && $company->hasPermission('reporte_cartera_dia');
+        $showPortfolioOverdue = $company && $company->hasPermission('reporte_cartera_morosa');
         $portfolioReportDate = $request->portfolio_date ?? now()->format('Y-m-d');
-        $portfolioReport = (new \App\Exports\PortfolioDailyReportExport($portfolioReportDate))->data();
-        $portfolioOverdueReport = $this->portfolioOverdueReport($portfolioReportDate);
+        $portfolioReport = null;
+        $portfolioOverdueReport = null;
+
+        if ($showPortfolioDaily) {
+            $portfolioReport = (new PortfolioDailyReportExport($portfolioReportDate))->data();
+        }
+
+        if ($showPortfolioOverdue) {
+            $portfolioOverdueReport = $this->portfolioOverdueReport($portfolioReportDate);
+        }
 
         return view('index', compact(
-                'today_payments', 'today_projected', 'today_real', 'active_clients', 'due_clients', 'home_sales_1', 'sales_1', 'sales_2', 'sales_3', 'sales_4', 'sales_5', 'sales_6', 'total', 'due_total', 'wallet_total', 'requested_amount', 'expenses', 'sales_totals_1', 'expenses_totals_1', 'sales_totals_2', 'expenses_totals_2', 'sellers','seller_wallet','today_timely_payments','due_quotas','portfolioReport','portfolioOverdueReport','accountBalances'));
+                'today_payments', 'today_projected', 'today_real', 'active_clients', 'due_clients', 'home_sales_1', 'sales_1', 'sales_2', 'sales_3', 'sales_4', 'sales_5', 'sales_6', 'total', 'due_total', 'wallet_total', 'requested_amount', 'expenses', 'sales_totals_1', 'expenses_totals_1', 'sales_totals_2', 'expenses_totals_2', 'sellers','seller_wallet','today_timely_payments','due_quotas','portfolioReport','portfolioOverdueReport','accountBalances','showPortfolioDaily','showPortfolioOverdue','portfolioReportDate'));
     }
 
     public function accountBalances()
@@ -603,9 +619,24 @@ class WebController extends Controller
     }
     public function reportClients(Request $request)
     {
+        $company = auth()->user()->company;
+        $metric = $request->metric ?: 'current_clients';
+        $isOverdueMetric = strpos($metric, 'mora_') === 0;
+
+        if (!$company) {
+            abort(403);
+        }
+
+        if ($isOverdueMetric && !$company->hasPermission('reporte_cartera_morosa')) {
+            abort(403, 'Esta financiera no tiene habilitado el reporte de cartera morosa.');
+        }
+
+        if (!$isOverdueMetric && !$company->hasPermission('reporte_cartera_dia')) {
+            abort(403, 'Esta financiera no tiene habilitado el reporte de cartera al día.');
+        }
+
         $sellerId = $request->seller_id;
         $date = $request->date ? \Carbon\Carbon::parse($request->date) : today();
-        $metric = $request->metric ?: 'current_clients';
         $monthStart = $date->copy()->startOfMonth();
         $initialDate = $monthStart->copy()->subDay();
         $previousStart = $date->copy()->subMonthNoOverflow()->startOfMonth();
