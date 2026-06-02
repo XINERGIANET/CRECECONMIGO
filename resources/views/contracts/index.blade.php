@@ -120,10 +120,12 @@
                                 <td>
 
                                     <div class="d-flex gap-2">
+                                        {{-- 
                                         <a href="{{ route('contracts.pdfPersonal', $contract) }}"
                                             class="btn btn-primary btn-icon" title="Contrato">
                                             <i class="ti ti-file-text icon"></i>
                                         </a>
+                                        --}}
                                         @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('operations'))
                                             @if (!$contract->approved)
                                                 <button class="btn btn-icon btn-success btn-approve"

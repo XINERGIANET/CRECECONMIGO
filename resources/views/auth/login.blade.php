@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
 	<link rel="icon" href="{{ asset('assets/images/xinergia-icon.svg') }}">
+	<link rel="apple-touch-icon" href="{{ asset('assets/images/favicon.png') }}">
 	<style>
 		:root {
 			--login-blue: #2f73ca;
