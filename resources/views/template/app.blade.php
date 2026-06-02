@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</title>
     <link rel="icon" href="{{ asset('assets/images/LOGO X - 3D - SIN FONDO.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/images/LOGO X - 3D - SIN FONDO.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-vendors.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
