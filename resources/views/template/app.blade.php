@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</title>
-    <link rel="icon" href="{{ asset('assets/images/xinergia-icon.svg') }}">
+    <link rel="icon" href="{{ asset('assets/images/LOGO X - 3D - SIN FONDO.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-vendors.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
