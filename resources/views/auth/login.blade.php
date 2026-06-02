@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
 	<link rel="icon" href="{{ asset('assets/images/xinergia-icon.svg') }}">
-	<link rel="apple-touch-icon" href="{{ asset('assets/images/favicon.png') }}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/apple-touch-icon.png') }}?v={{ filemtime(public_path('assets/images/apple-touch-icon.png')) }}">
 	<style>
 		:root {
 			--login-blue: #2f73ca;
