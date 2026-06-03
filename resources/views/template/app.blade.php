@@ -6,8 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ auth()->check() && auth()->user()->company ? auth()->user()->company->name : 'SaaS ADMIN' }}</title>
-    <link rel="icon" href="{{ asset('assets/images/LOGO X - 3D - SIN FONDO.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon-16x16.png') }}?v={{ filemtime(public_path('assets/images/favicon-16x16.png')) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/images/favicon-32x32.png') }}?v={{ filemtime(public_path('assets/images/favicon-32x32.png')) }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/apple-touch-icon.png') }}?v={{ filemtime(public_path('assets/images/apple-touch-icon.png')) }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Crece Conmigo">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#01114b">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-vendors.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/tabler-icons.min.css') }}">
