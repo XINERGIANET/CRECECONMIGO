@@ -390,9 +390,7 @@
                                     <select class="form-select" name="seller_id">
                                         <option value="">Seleccionar</option>
                                         @foreach ($sellers as $seller)
-                                            @if($seller->name === 'ADMIN')
-                                                <option value="{{ $seller->id }}" selected>{{ $seller->name }}</option>
-                                            @endif
+                                            <option value="{{ $seller->id }}">{{ $seller->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -472,7 +470,7 @@
                                         autocomplete="off">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Asesor</label>
+                                    <label class="form-label">Asesor comercial</label>
                                     <select class="form-select" name="seller_id" id="editSeller">
                                         <option value="">Seleccionar</option>
                                         @foreach ($sellers as $seller)

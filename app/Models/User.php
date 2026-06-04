@@ -33,7 +33,11 @@ class User extends Authenticatable
     public $timestamps = false;
 
     public function scopeSeller($query){
-        return $query->where('role', 'seller');
+        $query->where('role', 'seller');
+        if (auth()->check() && auth()->user()->company_id) {
+            $query->where('company_id', auth()->user()->company_id);
+        }
+        return $query;
     }
 
     public function scopeActive($query){

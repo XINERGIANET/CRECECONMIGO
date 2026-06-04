@@ -16,6 +16,7 @@ use App\Http\Controllers\InterestController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\AccountMovementController;
+use App\Http\Controllers\AdvisorController;
 
 
 Route::get('optimize', function () {
@@ -99,6 +100,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('role:admin')->group(function () {
+	Route::get('advisors/api', [AdvisorController::class, 'api'])->name('advisors.api');
+	Route::put('advisors/drop/{id}', [AdvisorController::class, 'drop'])->name('advisors.drop');
+	Route::put('advisors/up/{id}', [AdvisorController::class, 'up'])->name('advisors.up');
+	Route::resource('advisors', AdvisorController::class)->except(['create', 'show']);
+
 	Route::put('sellers/drop/{id}', [SellerController::class, 'drop'])->name('sellers.drop');
 	Route::put('sellers/up/{id}', [SellerController::class, 'up'])->name('sellers.up');
 

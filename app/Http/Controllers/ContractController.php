@@ -11,6 +11,7 @@ use App\Exports\EndingContractsExport;
 use App\Exports\SentinelExport;
 use App\Models\Config;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Advisor;
 use App\Models\Contract;
 use App\Models\Quota;
 use App\Models\User;
@@ -136,6 +137,7 @@ class ContractController extends Controller
             'husband_name' => 'nullable',
             'husband_document' => 'nullable|size:8',
             'seller_id' => 'required',
+            'advisor_id' => 'nullable|exists:advisors,id',
             'requested_amount' => 'required|numeric',
             'months_number' => 'required|numeric|min:1',
             'date' => 'required|date',
@@ -335,6 +337,7 @@ class ContractController extends Controller
             }
 
             $contract->seller_id = $request->seller_id;
+            $contract->advisor_id = $request->advisor_id ?: null;
             $contract->requested_amount = $request->requested_amount;
             $contract->months_number = $months; // Guardar el número de meses calculado
             $contract->quotas_number = $quotas_rounded; // Guardar el número de cuotas
@@ -387,6 +390,7 @@ class ContractController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string',
             'seller_id' => 'required|exists:users,id',
+            'advisor_id' => 'nullable|exists:advisors,id',
         ]);
 
         if ($validator->fails()) {
@@ -399,6 +403,7 @@ class ContractController extends Controller
         $contract->update([
             'name' => $request->name ?? $contract->name,
             'seller_id' => $request->seller_id,
+            'advisor_id' => $request->advisor_id ?: null,
         ]);
 
         return response()->json(['status' => true]);

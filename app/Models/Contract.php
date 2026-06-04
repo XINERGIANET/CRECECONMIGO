@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToCompany;
+use App\Models\Advisor;
 
 class Contract extends Model
 {
@@ -31,6 +32,7 @@ class Contract extends Model
         'husband_name',
         'husband_document',
         'seller_id',
+        'advisor_id',
         'requested_amount',
         'months_number',
         'quotas_number',
@@ -84,6 +86,11 @@ class Contract extends Model
     public function seller()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function advisor()
+    {
+        return $this->belongsTo(Advisor::class);
     }
 
     public function quotas()
