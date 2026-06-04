@@ -177,6 +177,7 @@
                                     <label class="form-label required">Tipo de cliente</label>
                                     <select class="form-select" name="client_type" id="client_type">
                                         <option value="Personal">Personal</option>
+                                        <option value="Grupo">Grupo</option>
                                     </select>
                                 </div>
                             </div>
@@ -437,13 +438,7 @@
                                         autocomplete="off">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label class="form-label required">Monto seguro</label>
-                                    <input type="text" class="form-control" name="insurance_cost" id="insurance_cost"
-                                        autocomplete="off">
-                                </div>
-                            </div>
+                            <input type="hidden" name="insurance_cost" id="insurance_cost" value="0">
                         </div>
                     </div>
                     <div class="modal-footer">
