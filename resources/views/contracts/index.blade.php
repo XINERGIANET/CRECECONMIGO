@@ -177,7 +177,6 @@
                                     <label class="form-label required">Tipo de cliente</label>
                                     <select class="form-select" name="client_type" id="client_type">
                                         <option value="Personal">Personal</option>
-                                        <option value="Grupo">Grupo</option>
                                     </select>
                                 </div>
                             </div>
@@ -387,7 +386,9 @@
                                     <select class="form-select" name="seller_id">
                                         <option value="">Seleccionar</option>
                                         @foreach ($sellers as $seller)
-                                            <option value="{{ $seller->id }}">{{ $seller->name }}</option>
+                                            @if($seller->name === 'ADMIN')
+                                                <option value="{{ $seller->id }}" selected>{{ $seller->name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
