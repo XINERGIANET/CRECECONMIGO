@@ -171,6 +171,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-info py-2 mb-3">
+                            <strong>Campos obligatorios:</strong> DNI, Nombre, Teléfono y Referencia.
+                        </div>
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="mb-3">
@@ -227,14 +230,14 @@
                             </div>
                             <div class="col-lg-4" id="divAddress">
                                 <div class="mb-3">
-                                    <label class="form-label required">Dirección</label>
+                                    <label class="form-label">Dirección</label>
                                     <input type="text" class="form-control" name="address" id="address"
                                         autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-lg-4" id="divDepartment">
                                 <div class="mb-3">
-                                    <label class="form-label required">Departamento</label>
+                                    <label class="form-label">Departamento</label>
                                     <select class="form-select" name="department_id" id="department_id">
                                         <option value="">Seleccionar</option>
                                         @foreach ($departments as $department)
@@ -245,7 +248,7 @@
                             </div>
                             <div class="col-lg-4" id="divProvince">
                                 <div class="mb-3">
-                                    <label class="form-label required">Provincia</label>
+                                    <label class="form-label">Provincia</label>
                                     <select class="form-select" name="province_id" id="province_id">
                                         <option value="">Seleccionar</option>
                                     </select>
@@ -253,7 +256,7 @@
                             </div>
                             <div class="col-lg-4" id="divDistrict">
                                 <div class="mb-3">
-                                    <label class="form-label required">Distrito</label>
+                                    <label class="form-label">Distrito</label>
                                     <select class="form-select" name="district_id" id="district_id">
                                         <option value="">Seleccionar</option>
                                     </select>
@@ -268,7 +271,7 @@
                             </div>
                             <div class="col-lg-4" id="divHomeType">
                                 <div class="mb-3">
-                                    <label class="form-label required">Tipo de vivienda</label>
+                                    <label class="form-label">Tipo de vivienda</label>
                                     <select class="form-select" name="home_type" id="home_type">
                                         <option value="">Seleccionar</option>
                                         <option value="Propia">Propia</option>
@@ -299,7 +302,7 @@
                             </div>
                             <div class="col-lg-4" id="divCivilStatus">
                                 <div class="mb-3">
-                                    <label class="form-label required">Estado civil</label>
+                                    <label class="form-label">Estado civil</label>
                                     <select class="form-select" name="civil_status" id="civil_status">
                                         <option value="">Seleccionar</option>
                                         <option value="Soltero">Soltero</option>
