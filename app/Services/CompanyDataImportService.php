@@ -353,9 +353,9 @@ class CompanyDataImportService
             if ($typeQuota === 1) {
                 $quotaDate = $date->copy()->addWeeks($i);
             } elseif ($typeQuota === 2) {
-                $quotaDate = $date->copy()->addWeeks($i * 2);
+                $quotaDate = $date->copy()->addDays($i * 15);
             } else {
-                $quotaDate = $date->copy()->addMonths($i);
+                $quotaDate = $date->copy()->addWeeks($i);
             }
 
             $amount = ($i === $quotasRounded) ? $lastQuota : $quotaAmountStandard;
@@ -519,7 +519,7 @@ class CompanyDataImportService
             ->first();
 
         if (!$method) {
-            $this->errors[] = 'PAGOS fila ' . $line . ': método de pago "' . $name . '" no existe. Use Efectivo, BCP o YAPE.';
+            $this->errors[] = 'PAGOS fila ' . $line . ': método de pago "' . $name . '" no existe. Use Efectivo o YAPE.';
 
             return null;
         }
@@ -534,13 +534,12 @@ class CompanyDataImportService
             '1' => 1,
             'semanal' => 1,
             '2' => 2,
+            'quincenal' => 2,
             'catorcenal' => 2,
-            '4' => 4,
-            'mensual' => 4,
         ];
 
         if (!isset($map[$value])) {
-            $this->errors[] = 'CONTRATOS fila ' . $line . ': tipo_cuota inválido. Use Semanal, Catorcenal o Mensual.';
+            $this->errors[] = 'CONTRATOS fila ' . $line . ': tipo_cuota inválido. Use Semanal o Quincenal.';
 
             return null;
         }

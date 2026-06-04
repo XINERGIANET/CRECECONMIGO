@@ -46,7 +46,7 @@ class ContractsExport implements FromCollection, WithHeadings, WithMapping, With
 
     private function quotaType(Contract $contract): string
     {
-        $map = [1 => 'Semanal', 2 => 'Catorcenal', 4 => 'Mensual'];
+        $map = [1 => 'Semanal', 2 => 'Quincenal', 4 => 'Mensual'];
 
         if (!is_null($contract->type_quota) && isset($map[(int) $contract->type_quota])) {
             return $map[(int) $contract->type_quota];
@@ -59,7 +59,7 @@ class ContractsExport implements FromCollection, WithHeadings, WithMapping, With
             $diff = Carbon::parse($firstTwo[0]->date)->diffInDays(Carbon::parse($firstTwo[1]->date));
 
             if ($diff >= 25 && $diff <= 35) return 'Mensual';
-            if ($diff >= 12 && $diff <= 16) return 'Catorcenal';
+            if ($diff >= 12 && $diff <= 16) return 'Quincenal';
             if ($diff >= 5  && $diff <= 9)  return 'Semanal';
         }
 

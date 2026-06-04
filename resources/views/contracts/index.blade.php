@@ -261,7 +261,7 @@
                             </div>
                             <div class="col-lg-4" id="divReference">
                                 <div class="mb-3">
-                                    <label class="form-label">Referencia</label>
+                                    <label class="form-label required">Referencia</label>
                                     <input type="text" class="form-control" name="reference" id="reference"
                                         autocomplete="off">
                                 </div>
@@ -411,8 +411,7 @@
                                     <label class="form-label required">Tipo de Cuota</label>
                                     <select class="form-select" name="type_quota">
                                         <option value="1">Semanal</option>
-                                        <option value="2">Catorcenal</option>
-                                        <option value="4">Mensual</option>
+                                        <option value="2">Quincenal</option>
                                     </select>
                                 </div>
                             </div>

@@ -74,7 +74,7 @@ class CompanyController extends Controller
 
         $company = Company::create($data);
 
-        foreach (['Efectivo', 'BCP', 'YAPE'] as $methodName) {
+        foreach (['Efectivo', 'YAPE'] as $methodName) {
             PaymentMethod::withoutGlobalScopes()->create([
                 'company_id' => $company->id,
                 'name' => $methodName,

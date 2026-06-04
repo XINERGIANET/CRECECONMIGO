@@ -19,7 +19,7 @@ class PaymentMethod extends Model
     public $timestamps = false;
 
     public function scopeActive($query){
-        return $query->where('active', 1);
+        return $query->where('active', 1)->whereIn('name', ['Efectivo', 'YAPE', 'Yape']);
     }
 
     public function sales(){

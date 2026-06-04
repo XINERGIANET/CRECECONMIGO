@@ -39,7 +39,7 @@ class ContractController extends Controller
         })->latest('date')->latest('id')->paginate(20);
 
         // Mapear el tipo de cuota numérico a texto legible
-        $quotaTypeMap = [1 => 'Semanal', 2 => 'Catorcenal', 4 => 'Mensual'];
+        $quotaTypeMap = [1 => 'Semanal', 2 => 'Quincenal', 4 => 'Mensual'];
         foreach ($contracts as $contract) {
             if (!is_null($contract->type_quota) && isset($quotaTypeMap[(int) $contract->type_quota])) {
                 $contract->quota_type = $quotaTypeMap[(int) $contract->type_quota];
@@ -51,7 +51,7 @@ class ContractController extends Controller
                     if ($daysDiff >= 25 && $daysDiff <= 35) {
                         $contract->quota_type = 'Mensual';
                     } elseif ($daysDiff >= 12 && $daysDiff <= 16) {
-                        $contract->quota_type = 'Catorcenal';
+                        $contract->quota_type = 'Quincenal';
                     } elseif ($daysDiff >= 5 && $daysDiff <= 9) {
                         $contract->quota_type = 'Semanal';
                     } else {
@@ -128,6 +128,7 @@ class ContractController extends Controller
             'name' => 'nullable',
             'group_name' => 'nullable',
             'phone' => 'nullable',
+            'reference' => 'nullable',
             'address' => 'nullable',
             'home_type' => 'nullable',
             'business_start_date' => 'nullable|date',
@@ -139,11 +140,11 @@ class ContractController extends Controller
             'months_number' => 'required|numeric|min:1',
             'date' => 'required|date',
             'interest' => 'nullable|numeric',
-            'type_quota' => 'required|in:1,2,4',
+            'type_quota' => 'required|in:1,2',
             'insurance_cost' => 'required|numeric|min:0',
         ]);
 
-        $validator->sometimes(['document', 'name', 'phone', 'address', 'home_type', 'civil_status'], 'required', function ($request) {
+        $validator->sometimes(['document', 'name', 'phone', 'reference', 'address', 'home_type', 'civil_status'], 'required', function ($request) {
             return $request->client_type == 'Personal';
         });
 
@@ -215,11 +216,10 @@ class ContractController extends Controller
         $quotas_rounded = ceil($quotas);
 
         // Calcular el número de meses internamente según el tipo de cuota
-        // Mapeo: 1 => semanal (4 cuotas/mes), 2 => catorcenal (2 cuotas/mes), 4 => mensual (1 cuota/mes)
+        // Mapeo: 1 => semanal (4 cuotas/mes), 2 => quincenal (2 cuotas/mes)
         $quotasPerMonthMap = [
             1 => 4,  // semanal: 4 cuotas por mes
-            2 => 2,  // catorcenal: 2 cuotas por mes
-            4 => 1,  // mensual: 1 cuota por mes
+            2 => 2,  // quincenal: 2 cuotas por mes
         ];
 
         $quotasPerMonth = isset($quotasPerMonthMap[$type_quota]) ? $quotasPerMonthMap[$type_quota] : 4;
@@ -257,11 +257,8 @@ class ContractController extends Controller
                 // semanal (cada 7 días)
                 $quota_date = $date->copy()->addWeeks($i);
             } elseif ($type_quota === 2) {
-                // catorcenal (cada 14 días)
-                $quota_date = $date->copy()->addWeeks($i * 2);
-            } elseif ($type_quota === 4) {
-                // mensual
-                $quota_date = $date->copy()->addMonths($i);
+                // quincenal (cada 15 días)
+                $quota_date = $date->copy()->addDays($i * 15);
             } else {
                 // fallback a semanal
                 $quota_date = $date->copy()->addWeeks($i);
@@ -429,11 +426,8 @@ class ContractController extends Controller
                 // semanal (cada 7 días)
                 $quota_date = $date->copy()->addWeeks($i);
             } elseif ($type_quota === 2) {
-                // catorcenal (cada 14 días)
-                $quota_date = $date->copy()->addWeeks($i * 2);
-            } elseif ($type_quota === 4) {
-                // mensual
-                $quota_date = $date->copy()->addMonths($i);
+                // quincenal (cada 15 días)
+                $quota_date = $date->copy()->addDays($i * 15);
             } else {
                 // fallback a semanal
                 $quota_date = $date->copy()->addWeeks($i);
@@ -661,7 +655,7 @@ class ContractController extends Controller
             if ($daysDiff >= 25 && $daysDiff <= 35) {
                 $contract->quota_type = 'Mensual';
             } elseif ($daysDiff >= 12 && $daysDiff <= 16) {
-                $contract->quota_type = 'Catorcenal';
+                $contract->quota_type = 'Quincenal';
             } elseif ($daysDiff >= 5 && $daysDiff <= 9) {
                 $contract->quota_type = 'Semanal';
             }
@@ -741,8 +735,8 @@ class ContractController extends Controller
                 $quotaTypeName = 'Mensual';
                 $quotaFrequencyText = 'cuotas mensuales';
             } elseif ($daysDiff >= 12 && $daysDiff <= 16) {
-                $quotaTypeName = 'Catorcenal';
-                $quotaFrequencyText = 'cuotas catorcenales';
+                $quotaTypeName = 'Quincenal';
+                $quotaFrequencyText = 'cuotas quincenales';
             } elseif ($daysDiff >= 5 && $daysDiff <= 9) {
                 $quotaTypeName = 'Semanal';
                 $quotaFrequencyText = 'cuotas semanales';
