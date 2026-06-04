@@ -126,7 +126,7 @@
                                             <i class="ti ti-file-text icon"></i>
                                         </a>
                                         --}}
-                                        @if (auth()->user()->hasRole('admin') || auth()->user()->hasRole('operations'))
+                                        @if (auth()->user()->hasRole('admin', 'operations', 'seller'))
                                             @if (!$contract->approved)
                                                 <button class="btn btn-icon btn-success btn-approve"
                                                     data-id="{{ $contract->id }}" title="Aprobar">
@@ -1024,7 +1024,7 @@
             var id = $(this).data('id');
 
             ToastConfirm.fire({
-                text: 'Â¿EstÃ¡s seguro que deseas borrar el registro?',
+                text: '¿Estás seguro que deseas borrar el registro?',
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
