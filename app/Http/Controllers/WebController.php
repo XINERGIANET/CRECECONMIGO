@@ -283,6 +283,7 @@ class WebController extends Controller
 
         // TOTAL DE CLIENTES (únicos por document|group_name) respetando mismos filtros
         $total_clients_count = DB::table('contracts')
+            ->where('company_id', $user->company_id)
             ->when($user->hasRole('seller'), function($q){
                 return $q->where('seller_id', auth()->user()->id);
             })
@@ -308,6 +309,7 @@ class WebController extends Controller
         $due_clients = DB::table('contracts')
             ->join('quotas', 'quotas.contract_id', 'contracts.id')
             ->leftJoin('payments', 'payments.quota_id', 'quotas.id')
+            ->where('contracts.company_id', $user->company_id)
             ->when($user->hasRole('seller'), function($q){
                 return $q->where('contracts.seller_id', auth()->user()->id);
             })
