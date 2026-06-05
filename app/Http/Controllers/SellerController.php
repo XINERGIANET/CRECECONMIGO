@@ -42,6 +42,7 @@ class SellerController extends Controller
         }
 
         User::create([
+            'company_id' => auth()->user()->company_id,
             'document' => $request->document,
             'name' => $request->name,
             'address' => $request->address,
