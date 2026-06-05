@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('api/reniec', [WebController::class, 'apiReniec'])->name('api.reniec');
 	Route::get('api/provinces', [WebController::class, 'apiProvinces'])->name('api.provinces');
 	Route::get('api/districts', [WebController::class, 'apiDistricts'])->name('api.districts');
+	Route::get('api/indicator-detail', [WebController::class, 'indicatorDetail'])->name('api.indicator-detail');
 
 	Route::get('clients/images', [ClientController::class, 'images'])->name('clients.images');
 	Route::post('clients/images', [ClientController::class, 'uploadImage'])->name('clients.uploadImage');

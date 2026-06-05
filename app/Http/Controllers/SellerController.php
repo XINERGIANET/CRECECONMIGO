@@ -24,13 +24,14 @@ class SellerController extends Controller
 
     public function store(Request $request)
     {
+        $companyId = auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
-            'document' => 'required|digits:8|unique:users,document',
+            'document' => 'required|digits:8|unique:users,document,NULL,id,company_id,' . $companyId,
             'name' => 'required',
             'address' => 'nullable',
             'phone' => 'nullable|digits:9',
             'email' => 'nullable|email',
-            'user' => 'required|unique:users,user',
+            'user' => 'required|unique:users,user,NULL,id,company_id,' . $companyId,
             'password' => 'required'
         ]);
 
@@ -65,13 +66,14 @@ class SellerController extends Controller
 
     public function update(Request $request, User $seller)
     {
+        $companyId = auth()->user()->company_id;
         $validator = Validator::make($request->all(), [
-            'document' => 'required|digits:8|unique:users,document,' . $seller->id,
+            'document' => 'required|digits:8|unique:users,document,' . $seller->id . ',id,company_id,' . $companyId,
             'name' => 'required',
             'address' => 'nullable',
             'phone' => 'nullable|digits:9',
             'email' => 'nullable|email',
-            'user' => 'required|unique:users,user,' . $seller->id,
+            'user' => 'required|unique:users,user,' . $seller->id . ',id,company_id,' . $companyId,
             'password' => 'nullable|string',
         ]);
 
