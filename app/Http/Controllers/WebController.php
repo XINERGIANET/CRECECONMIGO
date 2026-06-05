@@ -214,15 +214,15 @@ class WebController extends Controller
 
 
         // CARTERA TOTAL : suma de deuda entre las fechas establecidas
-        $wallet_total = Quota::when($request->start_date_1, function($query, $start_date){
-            return $query->whereHas('contract', function($query) use($start_date){
-                return $query->whereDate('date', '>=', $start_date);
-            });
-        })->when($request->end_date_1, function($query, $end_date){
-            return $query->whereHas('contract', function($query) use($end_date){
-                return $query->whereDate('date', '<=', $end_date);
-            });
-        })->where('paid', 0)->sum('debt');
+        $wallet_total = Quota::whereHas('contract', function($query) use($request){
+                $query->where('deleted', 0)
+                    ->when($request->start_date_1, function($q, $start_date){
+                        return $q->whereDate('date', '>=', $start_date);
+                    })
+                    ->when($request->end_date_1, function($q, $end_date){
+                        return $q->whereDate('date', '<=', $end_date);
+                    });
+            })->where('paid', 0)->sum('debt');
 
         // DEUDA TOTAL : CUOTAS QUE FALTAN PAGAR POR CLIENTES MOROSOS
         $due_total = Quota::when($request->start_date_1, function($query, $start_date){
@@ -230,8 +230,9 @@ class WebController extends Controller
         })->when($request->end_date_1, function($query, $end_date){
                 return $query->whereDate('date', '<=', $end_date);
         })->where('paid', 0)
-        ->whereHas('contract', function($q){ // suma de due_days de todos los payments de las cuotas del contrato > 0
-            return $q->whereRaw("(select coalesce(sum(p.due_days),0) from payments p inner join quotas qt on p.quota_id = qt.id where qt.contract_id = contracts.id) > 0");
+        ->whereHas('contract', function($q){
+            return $q->where('deleted', 0)
+                     ->whereRaw("(select coalesce(sum(p.due_days),0) from payments p inner join quotas qt on p.quota_id = qt.id where qt.contract_id = contracts.id) > 0");
         })->sum('debt');
 
         $payments = Payment::active()->when($request->start_date_1, function($query, $start_date){
