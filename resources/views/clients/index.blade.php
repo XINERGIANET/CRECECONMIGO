@@ -24,8 +24,8 @@
 			<div class="row">
 				<div class="col-md-3">
 					<div class="mb-3">
-						<label class="form-label">Cliente</label>
-						<input type="text" class="form-control" name="name" value="{{ request()->name }}">
+						<label class="form-label">Cliente / DNI</label>
+						<input type="text" class="form-control" name="name" value="{{ request()->name }}" placeholder="Nombre, grupo o DNI">
 					</div>
 				</div>
 				<div class="col-md-3">

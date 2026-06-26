@@ -59,6 +59,16 @@ class Contract extends Model
         return $query->where('deleted', 0);
     }
 
+    public function scopeSearchClient($query, $search)
+    {
+        return $query->where(function ($query) use ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('group_name', 'like', '%' . $search . '%')
+                ->orWhere('document', 'like', '%' . $search . '%')
+                ->orWhere('people', 'like', '%' . $search . '%');
+        });
+    }
+
     public function client()
     {
         if ($this->client_type == 'Personal') {

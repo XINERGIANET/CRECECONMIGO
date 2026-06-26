@@ -23,7 +23,7 @@ class ClientController extends Controller
         $clients = Contract::active()->when($user->hasRole('seller'), function($query) use($user){
             return $query->where('seller_id', $user->id);
         })->when($request->name, function($query, $name){
-            return $query->where('name', 'like', '%'.$name.'%');
+            return $query->searchClient($name);
         })->when($request->seller_id, function($query, $seller_id){
             return $query->where('seller_id', $seller_id);
         })->latest('date')->latest('id')->groupBy('document')->groupBy('group_name')
