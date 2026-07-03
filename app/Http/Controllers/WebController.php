@@ -864,18 +864,24 @@ class WebController extends Controller
     }
 
     public function apiReniec(Request $request){
-        $response = Http::get('https://api.perudevs.com/api/v1/dni/simple', [
-            'document' => $request->dni,
-            'key' => env('APIRENIEC_KEY'),
-        ]);
+        $response = Http::withToken((string) config('apireniec.key'))
+            ->timeout(15)
+            ->post((string) config('apireniec.url'), [
+                'dni' => $request->dni,
+            ]);
 
-        $data = $response->json();
+        $data = (array) $response->json();
+        $estado = (bool) ($data['success'] ?? false);
+        $resultado = (array) ($data['data'] ?? []);
 
-        if($response->successful() && isset($data['estado']) && $data['estado'] === true && !empty($data['resultado']['nombre_completo'])){
+        $nombreCompleto = $resultado['nombre_completo']
+            ?? trim(($resultado['nombres'] ?? '') . ' ' . ($resultado['apellido_paterno'] ?? '') . ' ' . ($resultado['apellido_materno'] ?? ''));
+
+        if($response->successful() && $estado && !empty($nombreCompleto)){
 
             return response()->json([
                 'status' => true,
-                'name' => $data['resultado']['nombre_completo']
+                'name' => $nombreCompleto
             ]);
 
         }else{
