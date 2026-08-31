@@ -31,6 +31,11 @@ class EndingContractsExport implements FromCollection, WithHeadings, WithMapping
             return $query->where(function ($query) use ($name) {
                 return $query->where('name', 'like', '%' . $name . '%')->orWhere('group_name', 'like', '%' . $name . '%');
             });
+        })->when($request->document, function ($query, $document) {
+            return $query->where(function ($query) use ($document) {
+                return $query->where('document', 'like', '%' . $document . '%')
+                    ->orWhere('people', 'like', '%' . $document . '%');
+            });
         })->when($request->seller_id, function ($query, $seller_id) {
             return $query->where('seller_id', $seller_id);
         })->where('paid', 0)->whereDate('last_payment_date', '>=', $start_date)->whereDate('last_payment_date', '<=', $end_date)

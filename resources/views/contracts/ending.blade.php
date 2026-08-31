@@ -28,6 +28,12 @@
 						</div>
 						<div class="col-md-3">
 							<div class="mb-3">
+								<label class="form-label">DNI</label>
+								<input type="text" class="form-control" name="document" value="{{ request()->document }}">
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="mb-3">
 								<label class="form-label">Asesor comercial</label>
 								<select class="form-select" name="seller_id">
 									<option value="">Seleccionar</option>

@@ -12,7 +12,6 @@
 
     <div class="card">
         <div class="card-header">
-
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
                 <i class="ti ti-plus icon"></i> Crear nuevo
             </button>
@@ -27,6 +26,12 @@
                         <div class="mb-3">
                             <label class="form-label">Cliente</label>
                             <input type="text" class="form-control" name="name" value="{{ request()->name }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">DNI</label>
+                            <input type="text" class="form-control" name="document" value="{{ request()->document }}">
                         </div>
                     </div>
                     @if (!auth()->user()->hasRole('seller'))

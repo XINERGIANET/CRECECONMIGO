@@ -30,6 +30,13 @@ class ContractsExport implements FromCollection, WithHeadings, WithMapping, With
                         ->orWhere('group_name', 'like', '%' . $name . '%');
                 });
             })
+            ->when($request->document, function ($query, $document) {
+                return $query->where(function ($query) use ($document) {
+                    return $query
+                        ->where('document', 'like', '%' . $document . '%')
+                        ->orWhere('people', 'like', '%' . $document . '%');
+                });
+            })
             ->when($request->seller_id, function ($query, $seller_id) {
                 return $query->where('seller_id', $seller_id);
             })
